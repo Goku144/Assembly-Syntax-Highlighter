@@ -2,7 +2,7 @@
 	"name": "assembly-syntax-highlighter",
 	"displayName": "Orion Assembly",
 	"description": "Assembly language support for x86, x64, ARM, AArch64, RISC-V and MIPS with syntax highlighting and NASM-aware language features.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.75.0"
@@ -129,11 +129,31 @@
 				"rules": {
 					"nasmDirectivePercent:x86asm": "#D7BA7D",
 					"nasmDirectiveKeyword:x86asm": "#D7BA7D",
-					"number:x86asm": "#3B8EEA",
+					"number:x86asm": "#6A9955",
 					"variable.readonly:x86asm": "#4FC1FF",
 					"nasmRegister:x86asm": "#2F6DB3",
 					"nasmDocTag:x86asm": "#DCDCAA"
 				}
+			},
+			"editor.tokenColorCustomizations": {
+				"textMateRules": [
+					{
+						"scope": [
+							"constant.numeric.x86asm",
+							"constant.numeric.float.x86asm",
+							"constant.numeric.hex.x86asm",
+							"constant.numeric.binary.x86asm",
+							"constant.numeric.octal.x86asm",
+							"constant.numeric.decimal.x86asm",
+							"constant.numeric.immediate.x86asm",
+							"constant.numeric.immediate.att.x86asm",
+							"constant.numeric.size.x86asm"
+						],
+						"settings": {
+							"foreground": "#6A9955"
+						}
+					}
+				]
 			}
 		}
 	},

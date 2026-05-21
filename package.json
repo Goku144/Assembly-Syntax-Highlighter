@@ -129,7 +129,7 @@
 				"rules": {
 					"nasmDirectivePercent:x86asm": "#D7BA7D",
 					"nasmDirectiveKeyword:x86asm": "#D7BA7D",
-					"number:x86asm": "#6A9955",
+					"number:x86asm": "#B5CEA8",
 					"variable.readonly:x86asm": "#4FC1FF",
 					"nasmRegister:x86asm": "#2F6DB3",
 					"nasmDocTag:x86asm": "#DCDCAA"
@@ -150,7 +150,7 @@
 							"constant.numeric.size.x86asm"
 						],
 						"settings": {
-							"foreground": "#6A9955"
+							"foreground": "#B5CEA8"
 						}
 					}
 				]

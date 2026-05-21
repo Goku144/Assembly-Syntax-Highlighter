@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+client/out/
+server/out/
+*.tsbuildinfo
+
+# VS Code extension packages
+*.vsix
+.vsixmanifest
+
+# Logs and local environment
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/extensions.json
+
+# Test and coverage output
+coverage/
+.nyc_output/

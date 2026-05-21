@@ -1,0 +1,173 @@
+{
+	"name": "assembly-syntax-highlighter",
+	"displayName": "Orion Assembly",
+	"description": "Assembly language support for x86, x64, ARM, AArch64, RISC-V and MIPS with syntax highlighting and NASM-aware language features.",
+	"version": "0.1.0",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"main": "./client/out/extension.js",
+	"activationEvents": [
+		"onLanguage:x86asm"
+	],
+	"scripts": {
+		"compile": "tsc -b client server",
+		"watch": "tsc -b -watch client server",
+		"vscode:prepublish": "npm run compile"
+	},
+	"contributes": {
+		"configuration": {
+			"title": "Assembly Language",
+			"properties": {
+				"assembly.comments.lineComment": {
+					"type": "string",
+					"default": ";",
+					"description": "Character(s) used for line comments",
+					"examples": [
+						";",
+						"#",
+						"//"
+					]
+				},
+				"assembly.comments.blockComment": {
+					"type": "array",
+					"default": [
+						"/*",
+						"*/"
+					],
+					"description": "Characters used for block comments [start, end]",
+					"items": {
+						"type": "string"
+					},
+					"minItems": 2,
+					"maxItems": 2
+				},
+				"assembly.nasm.executablePath": {
+					"type": "string",
+					"default": "nasm",
+					"description": "Path to the NASM executable used for optional external validation."
+				},
+				"assembly.nasm.enableExternalValidation": {
+					"type": "boolean",
+					"default": false,
+					"description": "Run NASM as an optional validation oracle in addition to editor-native diagnostics."
+				}
+			}
+		},
+		"languages": [
+			{
+				"id": "x86asm",
+				"aliases": [
+					"x86-x64 Assembly",
+					"x86/x64 Assembly",
+					"x86/x64",
+					"x86-x64",
+					"arm",
+					"ARM Assembly",
+					"AArch64 Assembly",
+					"RISC-V Assembly",
+					"MIPS Assembly",
+					"x86asm"
+				],
+				"extensions": [
+					".asm",
+					".s",
+					".S",
+					".nasm",
+					".asmx",
+					".inc",
+					".gas",
+					".att",
+					".intel",
+					".x86",
+					".x86_64",
+					".amd64",
+					".ia32",
+					".arm",
+					".aarch64",
+					".riscv",
+					".mips"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "x86asm",
+				"scopeName": "source.x86asm",
+				"path": "./syntaxes/asm.tmLanguage.json"
+			}
+		],
+		"semanticTokenTypes": [
+			{
+				"id": "nasmDirectivePercent",
+				"description": "NASM preprocessor percent marker"
+			},
+			{
+				"id": "nasmDirectiveKeyword",
+				"description": "NASM preprocessor directive keyword"
+			},
+			{
+				"id": "nasmRegister",
+				"description": "Assembly register"
+			},
+			{
+				"id": "nasmDocTag",
+				"description": "Doxygen-style assembly documentation tag"
+			}
+		],
+		"configurationDefaults": {
+			"editor.semanticHighlighting.enabled": true,
+			"editor.semanticTokenColorCustomizations": {
+				"enabled": true,
+				"rules": {
+					"nasmDirectivePercent:x86asm": "#D7BA7D",
+					"nasmDirectiveKeyword:x86asm": "#D7BA7D",
+					"number:x86asm": "#3B8EEA",
+					"variable.readonly:x86asm": "#4FC1FF",
+					"nasmRegister:x86asm": "#2F6DB3",
+					"nasmDocTag:x86asm": "#DCDCAA"
+				}
+			}
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Goku144/Assembly-Syntax-Highlighter.git"
+	},
+	"publisher": "Orion",
+	"icon": "images/icon.png",
+	"bugs": {
+		"url": "https://github.com/Goku144/Assembly-Syntax-Highlighter/issues"
+	},
+	"keywords": [
+		"x86-x64 Assembly",
+		"x86/x64 Assembly",
+		"x86/x64",
+		"x86-x64",
+		"x86asm",
+		"asm",
+		"assembly",
+		"x86",
+		"x64",
+		"intel",
+		"syntax",
+		"highlighting"
+	],
+	"homepage": "https://github.com/Goku144/Assembly-Syntax-Highlighter#readme",
+	"dependencies": {
+		"vscode-languageclient": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/node": "^20.12.7",
+		"typescript": "^5.4.5",
+		"vscode": "^1.1.34",
+		"vscode-languageserver": "^9.0.1",
+		"vscode-languageserver-textdocument": "^1.0.11",
+		"web-tree-sitter": "^0.25.3"
+	}
+}

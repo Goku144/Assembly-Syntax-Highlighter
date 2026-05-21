@@ -1,0 +1,656 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "x86/x64/ARM Assembly",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#sections"
+    },
+    {
+      "include": "#directives"
+    },
+    {
+      "include": "#data_labels"
+    },
+    {
+      "include": "#labels"
+    },
+    {
+      "include": "#registers"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#special_symbols"
+    },
+    {
+      "include": "#instructions"
+    },
+    {
+      "include": "#memory_operands"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#symbols"
+    },
+    {
+      "include": "#structure"
+    },
+    {
+      "include": "#macros"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.x86asm",
+          "begin": ";",
+          "end": "$",
+          "patterns": [
+            {
+              "include": "#doc_comments"
+            }
+          ]
+        },
+        {
+          "name": "comment.line.double-slash.x86asm",
+          "begin": "//",
+          "end": "$",
+          "patterns": [
+            {
+              "include": "#doc_comments"
+            }
+          ]
+        },
+        {
+          "name": "comment.line.hash.x86asm",
+          "match": "^\\s*#.*$"
+        },
+        {
+          "name": "comment.line.at-sign.x86asm",
+          "match": "(^|\\s)(@.*$)",
+          "captures": {
+            "2": {
+              "name": "comment.line.at-sign.x86asm"
+            }
+          }
+        },
+        {
+          "name": "comment.block.x86asm",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "patterns": [
+            {
+              "include": "#doc_comments"
+            }
+          ]
+        }
+      ]
+    },
+    "doc_comments": {
+      "patterns": [
+        {
+          "name": "keyword.other.documentation.doxygen.x86asm",
+          "match": "(?i)@(?:brief|param|returns?|note)\\b|\\bnote:"
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "meta.preprocessor.define.x86asm",
+          "match": "(?i)(%)(define)\\s+([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.directive.percent.x86asm"
+            },
+            "2": {
+              "name": "keyword.control.macro.define.x86asm"
+            },
+            "3": {
+              "name": "entity.name.macro.define.x86asm"
+            }
+          }
+        },
+        {
+          "name": "keyword.control.directive.assign.x86asm",
+          "match": "(?i)(%)(assign)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.directive.percent.x86asm"
+            },
+            "2": {
+              "name": "keyword.control.directive.assign.x86asm"
+            }
+          }
+        },
+        {
+          "name": "entity.name.type.class.storage-size.x86asm",
+          "match": "(?i)\\b(?:db|dw|dd|dq|dt|do|dy|dz|resb|resw|resd|resq|rest|reso|resy|resz|byte|word|dword|qword|tword|oword|yword|zword)\\b"
+        },
+        {
+          "name": "keyword.control.directive.equ.x86asm",
+          "match": "\\bequ\\b"
+        },
+        {
+          "name": "keyword.control.directive.nasm.x86asm",
+          "match": "(?i)(%)(if|ifn|ifdef|ifndef|ifidn|ifidni|ifid|ifnum|ifstr|ifctx|ifmacro|ifenv|elif|elifn|elifdef|elifndef|elifidn|elifidni|elifid|elifnum|elifstr|elifctx|elifmacro|elifenv|else|endif|include|pathsearch|depend|use|push|pop|repl|arg|stacksize|local|line|error|warning|fatal|rep|endrep|exitrep|rotate|macro|imacro|endmacro|unmacro|undef|assign|iassign|strlen|substr|defstr|idefstr|deftok|ideftok|xdefine|ixdefine|use16|use32|use64)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.directive.percent.x86asm"
+            },
+            "2": {
+              "name": "keyword.control.directive.nasm.x86asm"
+            }
+          }
+        },
+        {
+          "name": "keyword.control.directive.x86asm",
+          "match": "\\.(?:section|text|data|bss|rodata|rdata|sdata|sbss|tdata|tbss|tcomm|init|fini|file|loc|line|cfi_[a-zA-Z_]+|gcc_except_table|ctors|dtors|ascii|asciz|string|string8|string16|string32|lcomm|comm|byte|hword|2byte|4byte|8byte|short|word|long|quad|octa|float|double|single|dword|xword|inst|inst.n|insn|option|attribute|variant_cc|ident|align|balign|p2align|even|org|space|skip|zero|fill|type|size|scl|def|endef|globl|global|weak|hidden|protected|internal|extern|local|set|equ|eqv|macro|endm|func|endfunc|thumb|thumb_func|arm|code|syntax|arch|arch_extension|cpu|fpu|eabi_attribute|intel_syntax|att_syntax|code16|code32|code64|note|debug|uleb128|sleb128|ent|end|frame|mask|fmask|set)\\b"
+        },
+        {
+          "name": "keyword.control.directive.x86asm",
+          "match": "\\b(?:extern|global|public|common|segment|section|absolute|bits|use16|use32|use64|default|rel|abs|org|align|cpu|import|export|group|library|module|end|proc|endp|db|dw|dd|dq|dt|do|dy|dz|dc|dcb|dcd|dcq|dci|ds|resb|resw|resd|resq|rest|reso|resy|resz|times)\\b"
+        },
+        {
+          "name": "keyword.control.directive.offset.x86asm",
+          "match": "\\bOFFSET\\b"
+        }
+      ]
+    },
+    "data_labels": {
+      "patterns": [
+        {
+          "name": "constant.other.symbol.define.x86asm",
+          "match": "(?i)^\\s*%(?:define|assign|xdefine|ixdefine|iassign)\\s+([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\b",
+          "captures": {
+            "1": {
+              "name": "entity.name.macro.define.x86asm"
+            }
+          }
+        },
+        {
+          "name": "constant.other.symbol.equ.x86asm",
+          "match": "(?i)^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\s+(?:equ|=)\\b",
+          "captures": {
+            "1": {
+              "name": "constant.other.symbol.equ.name.x86asm"
+            }
+          }
+        },
+        {
+          "name": "variable.other.data.label.x86asm",
+          "match": "(?i)^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*):(?=\\s*(?:times\\s+[^;\\n]+\\s+)?(?:resb|resw|resd|resq|rest|reso|resy|resz|db|dw|dd|dq|dt|do|dy|dz|byte|word|dword|qword|tword|oword|yword|zword)\\b)",
+          "captures": {
+            "1": {
+              "name": "variable.other.data.label.name.x86asm"
+            }
+          }
+        },
+        {
+          "name": "variable.other.data.symbol.x86asm",
+          "match": "(?i)^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\s+(?=(?:times\\s+[^;\\n]+\\s+)?(?:resb|resw|resd|resq|rest|reso|resy|resz|db|dw|dd|dq|dt|do|dy|dz|byte|word|dword|qword|tword|oword|yword|zword)\\b)",
+          "captures": {
+            "1": {
+              "name": "variable.other.data.symbol.name.x86asm"
+            }
+          }
+        }
+      ]
+    },
+    "labels": {
+      "patterns": [
+        {
+          "name": "entity.name.function.label.local.x86asm",
+          "match": "^\\s*([.$][A-Za-z_.$?@][A-Za-z0-9_.$?@]*):",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.label.local.name.x86asm"
+            }
+          }
+        },
+        {
+          "name": "entity.name.function.label.x86asm",
+          "match": "^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*):",
+          "captures": {
+            "1": {
+              "name": "entity.name.function.label.name.x86asm"
+            }
+          }
+        },
+        {
+          "name": "entity.name.tag.label.x86asm",
+          "match": "^\\s*(L[A-Za-z0-9_.$?@]+):",
+          "captures": {
+            "1": {
+              "name": "entity.name.tag.label.name.x86asm"
+            }
+          }
+        }
+      ]
+    },
+    "sections": {
+      "patterns": [
+        {
+          "name": "keyword.control.section.x86asm",
+          "match": "\\.(section .(text|data|bss|tbss|tcomm))\\b"
+        },
+        {
+          "name": "keyword.control.section.x86asm",
+          "match": "\\.(text|data|bss|tbss|tcomm|rodata)\\b"
+        }
+      ]
+    },
+    "instructions": {
+      "patterns": [
+        {
+          "name": "keyword.control.instruction.arm.x86asm",
+          "match": "(?i)\\b(?:adc|adcs|add|adds|adr|adrp|and|ands|asr|asrs|b|bal|beq|bne|bcs|bcc|bhs|blo|bmi|bpl|bvs|bvc|bhi|bls|bge|blt|bgt|ble|bx|bl|blr|br|cbnz|cbz|cmn|cmp|csel|cset|eor|eors|ldp|ldpsw|ldr|ldrb|ldrh|ldrsb|ldrsh|ldrsw|lsl|lsls|lsr|lsrs|madd|mla|mov|movk|movn|movt|movw|movz|mrs|msr|mul|mvn|neg|nop|orr|orrs|pop|push|ret|ror|rors|sbc|sbcs|sdiv|smull|stp|str|strb|strh|sub|subs|svc|sxtb|sxth|sxtw|tbnz|tbz|tst|udiv|umull|uxtb|uxth|wfe|wfi|yield|vadd|vsub|vmul|vdiv|vldr|vstr|vmov|fadd|fsub|fmul|fdiv|fcmp|fcsel|fcvt|scvtf|ucvtf)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.riscv.x86asm",
+          "match": "(?i)\\b(?:add|addi|addiw|addw|and|andi|auipc|beq|bge|bgeu|blt|bltu|bne|call|c\\.add|c\\.addi|c\\.beqz|c\\.bnez|c\\.j|c\\.jal|c\\.jr|c\\.li|c\\.lw|c\\.mv|c\\.nop|c\\.ret|c\\.sw|csrr|csrrc|csrrci|csrrs|csrrsi|csrrw|csrrwi|div|divu|divuw|divw|ebreak|ecall|fadd\\.d|fadd\\.s|fcvt\\.d\\.s|fcvt\\.s\\.d|fdiv\\.d|fdiv\\.s|fld|flw|fmul\\.d|fmul\\.s|fsd|fsw|fsub\\.d|fsub\\.s|jal|jalr|j|la|lb|lbu|ld|lh|lhu|li|lui|lw|lwu|mul|mulh|mulhsu|mulhu|mulw|mv|neg|nop|not|or|ori|rem|remu|remuw|remw|ret|sb|sd|sh|sll|slli|slliw|sllw|slt|slti|sltiu|sltu|sra|srai|sraiw|sraw|srl|srli|srliw|srlw|sub|subw|sw|tail|xor|xori)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.mips.x86asm",
+          "match": "(?i)\\b(?:abs|add|addi|addiu|addu|and|andi|beq|bgez|bgtz|blez|bltz|bne|break|div|divu|eret|j|jal|jalr|jr|la|lb|lbu|ld|lh|lhu|li|ll|lui|lw|lwc1|mfhi|mflo|move|movn|movz|mthi|mtlo|mul|mult|multu|neg|nop|nor|or|ori|rem|rol|ror|sb|sc|sd|sll|sllv|slt|slti|sltiu|sltu|sra|srav|srl|srlv|sub|subu|sw|swc1|syscall|teq|tge|tgeu|tlt|tltu|tne|xor|xori)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.v.x86asm",
+          "match": "(?i)\\b(?:vaddpd|vaddps|vaddsd|vaddss|vaddsubpd|vaddsubps|vandnpd|vandnps|vandpd|vandps|vblendpd|vblendps|vblendvpd|vblendvps|vbroadcastsd|vbroadcastss|vcmppd|vcmpps|vcmpsd|vcmpss|vcomisd|vcomiss|vcvtdq2pd|vcvtdq2ps|vcvtpd2dq|vcvtpd2ps|vcvtps2dq|vcvtps2pd|vcvtsd2si|vcvtsd2ss|vcvtsi2sd|vcvtsi2ss|vcvtss2sd|vcvtss2si|vcvttpd2dq|vcvttps2dq|vcvttsd2si|vcvttss2si|vdivpd|vdivps|vdivsd|vdivss|vdppd|vdpps|vextractps|vhaddpd|vhaddps|vhsubpd|vhsubps|vinsertps|vlddqu|vldmxcsr|vmaskmovdqu|vmaskmovpd|vmaskmovps|vmaxpd|vmaxps|vmaxsd|vmaxss|vminpd|vminps|vminsd|vminss|vmovapd|vmovaps|vmovd|vmovddup|vmovdqa|vmovdqu|vmovhlps|vmovhpd|vmovhps|vmovlhps|vmovlpd|vmovlps|vmovmskpd|vmovmskps|vmovntdq|vmovntdqa|vmovntpd|vmovntps|vmovq|vmovsd|vmovshdup|vmovsldup|vmovss|vmovupd|vmovups|vmpsadbw|vmulpd|vmulps|vmulsd|vmulss|vorpd|vorps|vpabsb|vpabsd|vpabsw|vpackssdw|vpacksswb|vpackusdw|vpackuswb|vpaddb|vpaddd|vpaddq|vpaddsb|vpaddsw|vpaddusb|vpaddusw|vpaddw|vpalignr|vpand|vpandn|vpavgb|vpavgw|vpblendvb|vpblendw|vpcmpeqb|vpcmpeqd|vpcmpeqq|vpcmpeqw|vpcmpgtb|vpcmpgtd|vpcmpgtq|vpcmpgtw|vpextrb|vpextrd|vpextrq|vpextrw|vphaddd|vphaddsw|vphaddw|vphsubd|vphsubsw|vphsubw|vpinsrb|vpinsrd|vpinsrq|vpinsrw|vpmaddubsw|vpmaddwd|vpmaxsb|vpmaxsd|vpmaxsw|vpmaxub|vpmaxud|vpmaxuw|vpminsb|vpminsd|vpminsw|vpminub|vpminud|vpminuw|vpmovmskb|vpmuldq|vpmulhrsw|vpmulhuw|vpmulhw|vpmulld|vpmullw|vpmuludq|vpor|vpsadbw|vpshufb|vpshufd|vpshufhw|vpshuflw|vpshufw|vpsignb|vpsignd|vpsignw|vpslld|vpslldq|vpsllq|vpsllw|vpsrad|vpsraw|vpsrld|vpsrldq|vpsrlq|vpsrlw|vpsubb|vpsubd|vpsubq|vpsubsb|vpsubsw|vpsubusb|vpsubusw|vpsubw|vptest|vpunpckhbw|vpunpckhdq|vpunpckhqdq|vpunpckhwd|vpunpcklbw|vpunpckldq|vpunpcklqdq|vpunpcklwd|vpxor|vrcpps|vrcpss|vroundpd|vroundps|vroundsd|vroundss|vrsqrtps|vrsqrtss|vshufpd|vshufps|vsqrtpd|vsqrtps|vsqrtsd|vsqrtss|vstmxcsr|vsubpd|vsubps|vsubsd|vsubss|vucomisd|vucomiss|vunpckhpd|vunpckhps|vunpcklpd|vunpcklps|vxorpd|vxorps)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.a.x86asm",
+          "match": "(?i)\\b(?:aesdecwide128kl|aesdecwide256kl|aesencwide128kl|aesencwide256kl|aeskeygenassist|aesdec128kl|aesdec256kl|aesenc128kl|aesenc256kl|aesdeclast|aesenclast|addsubpd|addsubps|aesdec|aesenc|aesimc|andnpd|andnps|addpd|addps|addsd|addss|andpd|andps|adcx|adox|andn|arpl|aaa|aad|aam|aas|adc|add|and)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.b.x86asm",
+          "match": "(?i)\\b(?:blendvpd|blendvps|blendpd|blendps|blsmsk|bndldx|bndmov|bndstx|bextr|bndcl|bndcn|bndcu|bndmk|bound|bswap|blsi|blsr|bzhi|bnd|bsf|bsr|btc|btr|bts|bt)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.c.x86asm",
+          "match": "(?i)\\b(?:capabilities|clflushopt|cmpxchg16b|cmpxchg8b|cvttpd2dq|cvttpd2pi|cvttps2dq|cvttps2pi|cvttsd2si|cvttss2si|cldemote|clrssbsy|cvtdq2pd|cvtdq2ps|cvtpd2dq|cvtpd2pi|cvtpd2ps|cvtpi2pd|cvtpi2ps|cvtps2dq|cvtps2pd|cvtps2pi|cvtsd2si|cvtsd2ss|cvtsi2sd|cvtsi2ss|cvtss2sd|cvtss2si|clflush|cmovnae|cmovnbe|cmovnge|cmovnle|cmpxchg|cmovae|cmovbe|cmovcc|cmovge|cmovle|cmovna|cmovnb|cmovnc|cmovne|cmovng|cmovnl|cmovno|cmovnp|cmovns|cmovnz|cmovpe|cmovpo|comisd|comiss|cmova|cmovb|cmovc|cmove|cmovg|cmovl|cmovo|cmovp|cmovs|cmovz|cmppd|cmpps|cmpsb|cmpsd|cmpsq|cmpss|cmpsw|cpuid|crc32|call|cdqe|clac|clts|clui|clwb|cmps|cwde|cbw|cdq|clc|cld|cli|cmc|cmp|cqo|cwd)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.d.x86asm",
+          "match": "(?i)\\b(?:divpd|divps|divsd|divss|dppd|dpps|daa|das|dec|div)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.e.x86asm",
+          "match": "(?i)\\b(?:edecvirtchild|eincvirtchild|encodekey128|encodekey256|eacceptcopy|esetcontext|enteraccs|extractps|edeccssa|eaccept|ecreate|eextend|egetkey|endbr32|endbr64|enqcmds|erdinfo|eremove|ereport|eresume|etrackc|eblock|edbgrd|edbgwr|eenter|emodpe|emodpr|enqcmd|etrack|exitac|eexit|einit|eldbc|elduc|emodt|encls|enclu|enclv|enter|eadd|eaug|eldb|eldu|emms|epa|ewb)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.f.x86asm",
+          "match": "(?i)\\b(?:fcmovcc|fdecstp|fincstp|fnstenv|frndint|fsincos|fucomip|fucompp|fxrstor|fxtract|fyl2xp1|fcomip|fcompp|fdivrp|ffreep|ficomp|fidivr|fisttp|fisubr|fldenv|fldl2e|fldl2t|fldlg2|fldln2|fnclex|fninit|fnsave|fnstcw|fnstsw|fpatan|fprem1|frstor|fscale|fstenv|fsubrp|fucomi|fucomp|fxsave|f2xm1|faddp|fbstp|fclex|fcomi|fcomp|fdivp|fdivr|ffree|fiadd|ficom|fidiv|fimul|finit|fistp|fisub|fldcw|fldpi|fmulp|fprem|fptan|fsave|fsqrt|fstcw|fstsw|fsubp|fsubr|fucom|fwait|fyl2x|fabs|fadd|fbld|fchs|fcom|fcos|fdiv|fild|fist|fld1|fldz|fmul|fnop|fsin|fstp|fsub|ftst|fxam|fxch|fld|fst)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.g.x86asm",
+          "match": "(?i)\\b(?:gf2p8affineinvqb|gf2p8affineqb|gf2p8mulb)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.h.x86asm",
+          "match": "(?i)\\b(?:haddpd|haddps|hreset|hsubpd|hsubps|hlt)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.i.x86asm",
+          "match": "(?i)\\b(?:insertps|incsspd|incsspq|invpcid|invvpid|invept|invlpg|int01|int03|iretd|iretq|iretw|idiv|imul|insb|insd|insw|int1|int3|into|invd|iret|inc|ins|int|in)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.j.x86asm",
+          "match": "(?i)\\b(?:jecxz|jrcxz|jcxz|jnae|jnbe|jnge|jnle|jae|jbe|jcc|jge|jle|jmp|jna|jnb|jnc|jne|jng|jnl|jno|jnp|jns|jnz|jpe|jpo|ja|jb|jc|je|jg|jl|jo|jp|js|jz)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.k.x86asm",
+          "match": "(?i)\\b(?:kortestb|kortestd|kortestq|kortestw|kshiftlb|kshiftld|kshiftlq|kshiftlw|kshiftrb|kshiftrd|kshiftrq|kshiftrw|kunpckbw|kunpckdq|kunpckwd|kandnb|kandnd|kandnq|kandnw|ktestb|ktestd|ktestq|ktestw|kxnorb|kxnord|kxnorq|kxnorw|kaddb|kaddd|kaddq|kaddw|kandb|kandd|kandq|kandw|kmovb|kmovd|kmovq|kmovw|knotb|knotd|knotq|knotw|kxorb|kxord|kxorq|kxorw|korb|kord|korq|korw)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.l.x86asm",
+          "match": "(?i)\\b(?:ldtilecfg|loadiwkey|ldmxcsr|lfence|loopcc|loopne|loopnz|lddqu|leave|lodsb|lodsd|lodsq|lodsw|loope|loopz|lzcnt|lahf|lgdt|lidt|lldt|lmsw|lock|lods|loop|leaq|lar|lds|lea|les|lfs|lgs|lsl|lss|ltr)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.m.x86asm",
+          "match": "(?i)\\b(?:maskmovdqu|movdir64b|maskmovq|movmskpd|movmskps|movntdqa|movshdup|movsldup|monitor|movddup|movdiri|movdq2q|movhlps|movlhps|movntdq|movntpd|movntps|movq2dq|mpsadbw|mfence|movabs|movapd|movaps|movdqa|movdqu|movhpd|movhps|movlpd|movlps|movnti|movntq|movsxd|movupd|movups|maxpd|maxps|maxsd|maxss|minpd|minps|minsd|minss|movbe|movsb|movsd|movsq|movss|movsw|movsx|movzx|mulpd|mulps|mulsd|mulss|mwait|movd|movq|movs|mulx|mov|mul)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.n.x86asm",
+          "match": "(?i)\\b(?:neg|nop|not)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.o.x86asm",
+          "match": "(?i)\\b(?:outsb|outsd|outsw|orpd|orps|outs|out|or)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.p.x86asm",
+          "match": "(?i)\\b(?:prefetchwt1|parameters|phminposuw|punpckhqdq|punpcklqdq|pclmulqdq|pcmpestri|pcmpestrm|pcmpistri|pcmpistrm|pmaddubsw|prefetchh|prefetchw|punpckhbw|punpckhdq|punpckhwd|punpcklbw|punpckldq|punpcklwd|packssdw|packsswb|packusdw|packuswb|pblendvb|pmovmskb|pmulhrsw|paddusb|paddusw|palignr|pblendw|pcmpeqb|pcmpeqd|pcmpeqq|pcmpeqw|pcmpgtb|pcmpgtd|pcmpgtq|pcmpgtw|pconfig|phaddsw|phsubsw|pmaddwd|pmulhuw|pmuludq|pshufhw|pshuflw|psubusb|psubusw|ptwrite|paddsb|paddsw|pextrb|pextrd|pextrq|pextrw|phaddd|phaddw|phsubd|phsubw|pinsrb|pinsrd|pinsrq|pinsrw|pmaxsb|pmaxsd|pmaxsq|pmaxsw|pmaxub|pmaxud|pmaxuq|pmaxuw|pminsb|pminsd|pminsq|pminsw|pminub|pminud|pminuq|pminuw|pmovsx|pmovzx|pmuldq|pmulhw|pmulld|pmullq|pmullw|popcnt|psadbw|pshufb|pshufd|pshufw|psignb|psignd|psignw|pslldq|psrldq|psubsb|psubsw|pushad|pushfd|pushfq|pabsb|pabsd|pabsq|pabsw|paddb|paddd|paddq|paddw|pandn|pause|pavgb|pavgw|popad|popfd|popfq|pslld|psllq|psllw|psrad|psraq|psraw|psrld|psrlq|psrlw|psubb|psubd|psubq|psubw|ptest|pusha|pushf|pand|pdep|pext|popa|popf|push|pxor|pop|por)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.r.x86asm",
+          "match": "(?i)\\b(?:rdfsbase|rdgsbase|rstorssp|roundpd|roundps|roundsd|roundss|rsqrtps|rsqrtss|rdpkru|rdrand|rdseed|rdsspd|rdsspq|rdtscp|rcpps|rcpss|rdmsr|rdpid|rdpmc|rdtsc|repne|repnz|repe|repz|retf|retn|rorx|rcl|rcr|rep|ret|rol|ror|rsm)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.s.x86asm",
+          "match": "(?i)\\b(?:saveprevssp|sha256rnds2|sha256msg1|sha256msg2|serialize|sha1nexte|sha1rnds4|sttilecfg|senduipi|setssbsy|sha1msg1|sha1msg2|sysenter|stmxcsr|syscall|sysexit|senter|setnae|setnbe|setnge|setnle|sfence|shufpd|shufps|smctrl|sqrtpd|sqrtps|sqrtsd|sqrtss|swapgs|sysret|scasb|scasd|scasw|setae|setbe|setcc|setge|setle|setna|setnb|setnc|setne|setng|setnl|setno|setnp|setns|setnz|setpe|setpo|sexit|stosb|stosd|stosq|stosw|subpd|subps|subsd|subss|sahf|salc|sarx|scas|seta|setb|setc|sete|setg|setl|seto|setp|sets|setz|sgdt|shld|shlx|shrd|shrx|sidt|sldt|smsw|stac|stos|stui|sal|sar|sbb|shl|shr|stc|std|sti|str|sub)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.t.x86asm",
+          "match": "(?i)\\b(?:tileloaddt1|tilerelease|tilestored|tdpbf16ps|tileloadd|tilezero|tdpbssd|tdpbsud|tdpbusd|tdpbuud|testui|tpause|tzcnt|test)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.u.x86asm",
+          "match": "(?i)\\b(?:umonitor|unpckhpd|unpckhps|unpcklpd|unpcklps|ucomisd|ucomiss|umwait|uiret|ud0|ud1|ud2|ud)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.v.x86asm",
+          "match": "(?i)\\b(?:vcvtne2ps2bf16|vfmaddrnd231pd|vfmaddsub132pd|vfmaddsub132ph|vfmaddsub132ps|vfmaddsub213pd|vfmaddsub213ph|vfmaddsub213ps|vfmaddsub231pd|vfmaddsub231ph|vfmaddsub231ps|vfmsubadd132pd|vfmsubadd132ph|vfmsubadd132ps|vfmsubadd213pd|vfmsubadd213ph|vfmsubadd213ps|vfmsubadd231pd|vfmsubadd231ph|vfmsubadd231ps|vpmultishiftqb|vscatterpf0dpd|vscatterpf0dps|vscatterpf0qpd|vscatterpf0qps|vscatterpf1dpd|vscatterpf1dps|vscatterpf1qpd|vscatterpf1qps|vcvtneps2bf16|vextractf32x4|vextractf32x8|vextractf64x2|vextractf64x4|vextracti32x4|vextracti32x8|vextracti64x2|vextracti64x4|vgatherpf0dpd|vgatherpf0dps|vgatherpf0qpd|vgatherpf0qps|vgatherpf1dpd|vgatherpf1dps|vgatherpf1qpd|vgatherpf1qps|vp2intersectd|vp2intersectq|vextractf128|vextracti128|vfnmadd132pd|vfnmadd132ph|vfnmadd132ps|vfnmadd132sd|vfnmadd132sh|vfnmadd132ss|vfnmadd213pd|vfnmadd213ph|vfnmadd213ps|vfnmadd213sd|vfnmadd213sh|vfnmadd213ss|vfnmadd231pd|vfnmadd231ph|vfnmadd231ps|vfnmadd231sd|vfnmadd231sh|vfnmadd231ss|vfnmsub132pd|vfnmsub132ph|vfnmsub132ps|vfnmsub132sd|vfnmsub132sh|vfnmsub132ss|vfnmsub213pd|vfnmsub213ph|vfnmsub213ps|vfnmsub213sd|vfnmsub213sh|vfnmsub213ss|vfnmsub231pd|vfnmsub231ph|vfnmsub231ps|vfnmsub231sd|vfnmsub231sh|vfnmsub231ss|vinsertf32x4|vinsertf32x8|vinsertf64x2|vinsertf64x4|vinserti32x4|vinserti32x8|vinserti64x2|vinserti64x4|vpbroadcastb|vpbroadcastd|vpbroadcastm|vpbroadcastq|vpbroadcastw|vpshufbitqmb|vcompresspd|vcompressps|vcvttpd2udq|vcvttpd2uqq|vcvttph2udq|vcvttph2uqq|vcvttps2udq|vcvttps2uqq|vcvttsd2usi|vcvttsh2usi|vcvttss2usi|vfixupimmpd|vfixupimmps|vfixupimmsd|vfixupimmss|vfmadd132pd|vfmadd132ph|vfmadd132ps|vfmadd132sd|vfmadd132sh|vfmadd132ss|vfmadd213pd|vfmadd213ph|vfmadd213ps|vfmadd213sd|vfmadd213sh|vfmadd213ss|vfmadd231pd|vfmadd231ph|vfmadd231ps|vfmadd231sd|vfmadd231sh|vfmadd231ss|vfmsub132pd|vfmsub132ph|vfmsub132ps|vfmsub132sd|vfmsub132sh|vfmsub132ss|vfmsub213pd|vfmsub213ph|vfmsub213ps|vfmsub213sd|vfmsub213sh|vfmsub213ss|vfmsub231pd|vfmsub231ph|vfmsub231ps|vfmsub231sd|vfmsub231sh|vfmsub231ss|vinsertf128|vinserti128|vpbroadcast|vpcompressb|vpcompressd|vpcompressq|vpconflictd|vpconflictq|vpmadd52huq|vpmadd52luq|vpscatterdd|vpscatterdq|vpscatterqd|vpscatterqq|vrndscalepd|vrndscaleph|vrndscaleps|vrndscalesd|vrndscalesh|vrndscaless|vscatterdpd|vscatterdps|vscatterqpd|vscatterqps|v4fnmaddps|v4fnmaddss|vbroadcast|vcompressw|vcvtpd2udq|vcvtpd2uqq|vcvtph2psx|vcvtph2udq|vcvtph2uqq|vcvtps2phx|vcvtps2udq|vcvtps2uqq|vcvtsd2usi|vcvtsh2usi|vcvtss2usi|vcvttpd2qq|vcvttph2dq|vcvttph2qq|vcvttph2uw|vcvttps2qq|vcvttsh2si|vcvtudq2pd|vcvtudq2ph|vcvtudq2ps|vcvtuqq2pd|vcvtuqq2ph|vcvtuqq2ps|vcvtusi2sd|vcvtusi2sh|vcvtusi2ss|vfcmaddcph|vfcmaddcsh|vfpclasspd|vfpclassph|vfpclassps|vfpclasssd|vfpclasssh|vfpclassss|vgatherdpd|vgatherdps|vgatherqpd|vgatherqps|vgetmantpd|vgetmantph|vgetmantps|vgetmantsd|vgetmantsh|vgetmantss|vp4dpwssds|vperm2f128|vperm2i128|vpgatherdd|vpgatherdq|vpgatherqd|vpgatherqq|vpternlogd|vpternlogq|vrsqrt14pd|vrsqrt14ps|vrsqrt14sd|vrsqrt14ss|vrsqrt28pd|vrsqrt28ps|vrsqrt28sd|vrsqrt28ss|vshuff32x4|vshuff64x2|vshufi32x4|vshufi64x2|vzeroupper|v4fmaddps|v4fmaddss|vblendmpd|vblendmps|vcvtdq2ph|vcvtpd2ph|vcvtpd2qq|vcvtph2dq|vcvtph2pd|vcvtph2ps|vcvtph2qq|vcvtph2uw|vcvtps2ph|vcvtps2qq|vcvtqq2pd|vcvtqq2ph|vcvtqq2ps|vcvtsd2sh|vcvtsh2sd|vcvtsh2si|vcvtsh2ss|vcvtsi2sh|vcvtss2sh|vcvttph2w|vcvtuw2ph|vdbpsadbw|vdpbf16ps|vexpandpd|vexpandps|vfcmulcph|vfcmulcsh|vfmaddcph|vfmaddcsh|vgetexppd|vgetexpph|vgetexpps|vgetexpsd|vgetexpsh|vgetexpss|vmovdqa32|vmovdqa64|vmovdqu16|vmovdqu32|vmovdqu64|vp4dpwssd|vpblendmb|vpblendmd|vpblendmq|vpblendmw|vpdpbusds|vpdpwssds|vpermi2pd|vpermi2ps|vpermilpd|vpermilps|vpermt2pd|vpermt2ps|vpexpandb|vpexpandd|vpexpandq|vpexpandw|vpmaskmov|vpmovusdb|vpmovusdw|vpmovusqb|vpmovusqd|vpmovusqw|vpmovuswb|vptestnmb|vptestnmd|vptestnmq|vptestnmw|vreducepd|vreduceph|vreduceps|vreducesd|vreducesh|vreducess|vscalefpd|vscalefph|vscalefps|vscalefsd|vscalefsh|vscalefss|vcvtph2w|vcvtw2ph|vfmulcph|vfmulcsh|vmaskmov|vmlaunch|vmovdqu8|vmresume|vpblendd|vpdpbusd|vpdpwssd|vpermi2b|vpermi2d|vpermi2q|vpermi2w|vpermt2b|vpermt2d|vpermt2q|vpermt2w|vplzcntd|vplzcntq|vpmovb2m|vpmovd2m|vpmovm2b|vpmovm2d|vpmovm2q|vpmovm2w|vpmovq2m|vpmovsdb|vpmovsdw|vpmovsqb|vpmovsqd|vpmovsqw|vpmovswb|vpmovw2m|vptestmb|vptestmd|vptestmq|vptestmw|vrangepd|vrangeps|vrangesd|vrangess|vrcp14pd|vrcp14ps|vrcp14sd|vrcp14ss|vrcp28pd|vrcp28ps|vrcp28sd|vrcp28ss|vrsqrtph|vrsqrtsh|vucomish|vzeroall|valignd|valignq|vcomish|vexp2pd|vexp2ps|vmclear|vmptrld|vmptrst|vmwrite|vpcmpub|vpcmpud|vpcmpuq|vpcmpuw|vpermpd|vpermps|vpmovdb|vpmovdw|vpmovqb|vpmovqd|vpmovqw|vpmovwb|vpopcnt|vprolvd|vprolvq|vprorvd|vprorvq|vpshldv|vpshrdv|vpsllvd|vpsllvq|vpsllvw|vpsravd|vpsravq|vpsravw|vpsrlvd|vpsrlvq|vpsrlvw|vsqrtph|vsqrtsh|vtestpd|vtestps|vaddph|vaddsh|vcmpph|vcmpsh|vdivph|vdivsh|vmaxph|vmaxsh|vmcall|vmfunc|vminph|vminsh|vmovsh|vmread|vmulph|vmulsh|vmxoff|vpcmpb|vpcmpd|vpcmpq|vpcmpw|vpermb|vpermd|vpermq|vpermw|vprold|vprolq|vprord|vprorq|vpshld|vpshrd|vrcpph|vrcpsh|vsubph|vsubsh|vmovw|vmxon|verr|verw)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.w.x86asm",
+          "match": "(?i)\\b(?:wbnoinvd|wrfsbase|wrgsbase|wakeup|wbinvd|wrpkru|wrussd|wrussq|wrmsr|wrssd|wrssq|wait)\\b"
+        },
+        {
+          "name": "keyword.control.instruction.x.x86asm",
+          "match": "(?i)\\b(?:xresldtrk|xsusldtrk|xacquire|xrelease|xsaveopt|xrstors|xabort|xbegin|xgetbv|xrstor|xsavec|xsaves|xsetbv|xlatb|xorpd|xorps|xsave|xtest|xadd|xchg|xend|xlat|xor)\\b"
+        }
+      ]
+    },
+    "registers": {
+      "patterns": [
+        {
+          "name": "variable.language.register.att.x86asm",
+          "match": "(?i)%(?:r(?:1[0-5]|[8-9])(?:b|w|d)?|[er]?(?:ax|bx|cx|dx|si|di|bp|sp)|[abcd][hl]|[sb]pl|[sd]il|xmm(?:[0-9]|[12][0-9]|3[01])|ymm(?:[0-9]|[12][0-9]|3[01])|zmm(?:[0-9]|[12][0-9]|3[01])|k[0-7]|mm[0-7]|st(?:\\([0-7]\\)|[0-7])?|cs|ds|ss|es|fs|gs|cr[0-8]|dr[0-7]|rip|eip|eflags|rflags)\\b"
+        },
+        {
+          "name": "variable.language.register.arm.x86asm",
+          "match": "(?i)\\b(?:r(?:[0-9]|1[0-5])|w(?:[0-9]|[12][0-9]|3[01])|x(?:[0-9]|[12][0-9]|3[01])|v(?:[0-9]|[12][0-9]|3[01])|q(?:[0-9]|[12][0-9]|3[01])|d(?:[0-9]|[12][0-9]|3[01])|s(?:[0-9]|[12][0-9]|3[01])|h(?:[0-9]|[12][0-9]|3[01])|b(?:[0-9]|[12][0-9]|3[01])|sp|lr|pc|fp|ip|wzr|xzr|nzcv|cpsr|spsr)\\b"
+        },
+        {
+          "name": "variable.language.register.riscv.x86asm",
+          "match": "(?i)\\b(?:x(?:[0-9]|[12][0-9]|3[01])|zero|ra|sp|gp|tp|t[0-6]|s(?:[0-9]|1[01])|a[0-7]|f(?:[0-9]|[12][0-9]|3[01])|ft(?:[0-9]|1[01])|fs(?:[0-9]|1[01])|fa[0-7])\\b"
+        },
+        {
+          "name": "variable.language.register.mips.x86asm",
+          "match": "\\$(?:zero|at|v[01]|a[0-3]|t[0-9]|s[0-7]|k[01]|gp|sp|fp|ra|f(?:[0-9]|[12][0-9]|3[01])|[0-9]|[12][0-9]|3[01])\\b"
+        },
+        {
+          "name": "variable.language.register.simd.x86asm",
+          "match": "(?i)\\b(?:xmm(?:[0-9]|[12][0-9]|3[01])|ymm(?:[0-9]|[12][0-9]|3[01])|zmm(?:[0-9]|[12][0-9]|3[01]))\\b"
+        },
+        {
+          "name": "variable.language.register.mask.x86asm",
+          "match": "(?i)\\bk[0-7]\\b"
+        },
+        {
+          "name": "variable.language.register.tile.x86asm",
+          "match": "(?i)\\btmm[0-7]\\b"
+        },
+        {
+          "name": "variable.language.register.x87.x86asm",
+          "match": "(?i)\\b(?:st(?:\\([0-7]\\)|[0-7])?|mm[0-7])\\b"
+        },
+        {
+          "name": "variable.language.register.segment.x86asm",
+          "match": "(?i)\\b(?:cs|ds|ss|es|fs|gs)\\b"
+        },
+        {
+          "name": "variable.language.register.control.x86asm",
+          "match": "(?i)\\b(?:cr[0-8]|dr[0-7]|tr[3-7]|gdtr|idtr|ldtr|msw|mxcsr|pkru|bnd[0-3]|e?flags|rflags|eip|rip)\\b"
+        },
+        {
+          "name": "variable.language.register.x86asm",
+          "match": "(?i)\\b(?:r(?:1[0-5]|[8-9])(?:b|w|d)?|[er]?(?:ax|bx|cx|dx|si|di|bp|sp)|[abcd][hl]|[sb]pl|[sd]il)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.x86asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:[0-9]+\\.[0-9]*|\\.[0-9]+)(?:e[+-]?[0-9]+)?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.hex.x86asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:0x[0-9a-f]+h?|[0-9][0-9a-f]*h)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.binary.x86asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:0b[01]+|[01]+b)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.octal.x86asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])(?:0o[0-7]+|[0-7]+[oq])(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.decimal.x86asm",
+          "match": "(?<![A-Za-z0-9_.$])[0-9]+(?:d)?(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.immediate.x86asm",
+          "match": "(?i)(?<![A-Za-z0-9_.$])#-?(?:0x[0-9a-f]+|0b[01]+|[0-9]+)(?![A-Za-z0-9_.$])"
+        },
+        {
+          "name": "constant.numeric.immediate.att.x86asm",
+          "match": "(?i)\\$-?(?:0x[0-9a-f]+|0b[01]+|[0-9]+)(?![A-Za-z0-9_.$])"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.x86asm",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.x86asm",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.x86asm",
+          "match": "'([^'\\\\]|\\\\.)*'"
+        },
+        {
+          "name": "string.quoted.single.x86asm",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.x86asm",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "memory_operands": {
+      "patterns": [
+        {
+          "name": "support.type.memory.size.ptr.x86asm",
+          "match": "(?i)\\b(?:BYTE|WORD|DWORD|QWORD|XMMWORD|YMMWORD|ZMMWORD|TBYTE|TWORD|DQWORD|OWORD|FWORD|MMWORD)\\s+PTR\\b"
+        },
+        {
+          "name": "support.type.memory.size.x86asm",
+          "match": "(?i)\\b(?:byte|word|dword|qword|xmmword|ymmword|zmmword|tbyte|tword|dqword|oword|fword|mmword|near|far|short)\\b"
+        },
+        {
+          "name": "meta.memory.operand.x86asm",
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.bracket.square.begin.x86asm"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.bracket.square.end.x86asm"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#registers"
+            },
+            {
+              "include": "#constants"
+            },
+            {
+              "include": "#special_symbols"
+            },
+            {
+              "include": "#operators"
+            },
+            {
+              "include": "#symbols"
+            }
+          ]
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arithmetic.x86asm",
+          "match": "[+\\-*/%]"
+        },
+        {
+          "name": "keyword.operator.logical.x86asm",
+          "match": "[&|^~]"
+        },
+        {
+          "name": "keyword.operator.comparison.x86asm",
+          "match": "[<>=!]"
+        },
+        {
+          "name": "punctuation.separator.comma.x86asm",
+          "match": ","
+        },
+        {
+          "name": "punctuation.section.braces.x86asm",
+          "match": "[{}()]"
+        },
+        {
+          "name": "punctuation.separator.colon.x86asm",
+          "match": ":"
+        }
+      ]
+    },
+    "symbols": {
+      "patterns": [
+        {
+          "name": "meta.function-call.x86asm",
+          "match": "(?i)\\b(call)\\s+(?:near\\s+|far\\s+)?([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.instruction.c.x86asm"
+            },
+            "2": {
+              "name": "entity.name.function.call.x86asm"
+            }
+          }
+        },
+        {
+          "name": "meta.jump-target.x86asm",
+          "match": "(?i)\\b(j(?:mp|a|ae|b|be|c|e|g|ge|l|le|na|nae|nb|nbe|nc|ne|ng|nge|nl|nle|no|np|ns|nz|o|p|pe|po|s|z|cxz|ecxz|rcxz))\\s+(?:short\\s+|near\\s+)?([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.instruction.j.x86asm"
+            },
+            "2": {
+              "name": "entity.name.label.reference.x86asm"
+            }
+          }
+        },
+        {
+          "name": "variable.other.symbol.x86asm",
+          "match": "\\b[A-Za-z_.$?@][A-Za-z0-9_.$?@]*\\b"
+        }
+      ]
+    },
+    "structure": {
+      "patterns": [
+        {
+          "name": "entity.name.structure.x86asm",
+          "match": "\\bSTRUC\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b"
+        },
+        {
+          "name": "variable.parameter.structure_member.x86asm",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s+OFFSET\\s*\\b"
+        },
+        {
+          "name": "constant.numeric.size.x86asm",
+          "match": "\\b([0-9]+)\\s*:\\s*([0-9]+)\\b"
+        }
+      ]
+    },
+    "directive_definitions": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.def.x86asm",
+          "begin": "\\.def\\s+",
+          "end": ";",
+          "patterns": [
+            {
+              "name": "entity.name.function.x86asm",
+              "match": "([a-zA-Z_][a-zA-Z0-9_]*)"
+            },
+            {
+              "name": "keyword.control.directive.scl.x86asm",
+              "match": "\\.scl\\s+([0-9]+)"
+            },
+            {
+              "name": "keyword.control.directive.type.x86asm",
+              "match": "\\.type\\s+([0-9]+)"
+            },
+            {
+              "name": "keyword.control.directive.endef.x86asm",
+              "match": "\\.endef"
+            }
+          ]
+        }
+      ]
+    },
+    "macros": {
+      "patterns": [
+        {
+          "name": "keyword.control.macro.x86asm",
+          "match": "\\b(macro|endm)\\b"
+        },
+        {
+          "name": "entity.name.macro.x86asm",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s+macro\\b"
+        }
+      ]
+    },
+    "special_symbols": {
+      "patterns": [
+        {
+          "name": "constant.language.current-address.section.x86asm",
+          "match": "\\$\\$"
+        },
+        {
+          "name": "constant.language.current-address.x86asm",
+          "match": "\\$"
+        },
+        {
+          "name": "variable.language.nasm.argument.x86asm",
+          "match": "%\\$?[0-9]+"
+        },
+        {
+          "name": "variable.language.nasm.local-label.x86asm",
+          "match": "%%[A-Za-z_.$?@][A-Za-z0-9_.$?@]*"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.x86asm"
+}

@@ -1,0 +1,124 @@
+[
+  {
+    "mnemonic": "mov",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr", "widthFrom": 1 },
+      { "kind": "reg", "class": "gpr", "widthFrom": 0 }
+    ]
+  },
+  {
+    "mnemonic": "mov",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr" },
+      { "kind": "imm" }
+    ]
+  },
+  {
+    "mnemonic": "mov",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg" },
+      { "kind": "mem" }
+    ]
+  },
+  {
+    "mnemonic": "mov",
+    "mode": "any",
+    "operands": [
+      { "kind": "mem" },
+      { "kind": "reg" }
+    ]
+  },
+  {
+    "mnemonic": "lea",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr" },
+      { "kind": "mem" }
+    ]
+  },
+  {
+    "mnemonic": "push",
+    "mode": "any",
+    "operands": [{ "kind": "reg" }]
+  },
+  {
+    "mnemonic": "push",
+    "mode": "any",
+    "operands": [{ "kind": "mem" }]
+  },
+  {
+    "mnemonic": "push",
+    "mode": "any",
+    "operands": [{ "kind": "imm" }]
+  },
+  {
+    "mnemonic": "pop",
+    "mode": "any",
+    "operands": [{ "kind": "reg" }]
+  },
+  {
+    "mnemonic": "pop",
+    "mode": "any",
+    "operands": [{ "kind": "mem" }]
+  },
+  {
+    "mnemonic": "call",
+    "mode": "any",
+    "operands": [{ "kind": "rel" }]
+  },
+  {
+    "mnemonic": "jmp",
+    "mode": "any",
+    "operands": [{ "kind": "rel" }]
+  },
+  {
+    "mnemonic": "ret",
+    "mode": "any",
+    "operands": []
+  },
+  {
+    "mnemonic": "syscall",
+    "mode": "64",
+    "operands": []
+  },
+  {
+    "mnemonic": "nop",
+    "mode": "any",
+    "operands": []
+  },
+  {
+    "mnemonic": "add",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr", "widthFrom": 1 },
+      { "kind": "reg", "class": "gpr", "widthFrom": 0 }
+    ]
+  },
+  {
+    "mnemonic": "sub",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr", "widthFrom": 1 },
+      { "kind": "reg", "class": "gpr", "widthFrom": 0 }
+    ]
+  },
+  {
+    "mnemonic": "cmp",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr", "widthFrom": 1 },
+      { "kind": "reg", "class": "gpr", "widthFrom": 0 }
+    ]
+  },
+  {
+    "mnemonic": "xor",
+    "mode": "any",
+    "operands": [
+      { "kind": "reg", "class": "gpr", "widthFrom": 1 },
+      { "kind": "reg", "class": "gpr", "widthFrom": 0 }
+    ]
+  }
+]

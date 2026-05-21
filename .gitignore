@@ -1,9 +1,7 @@
 # Dependencies
 node_modules/
 
-# TypeScript build output
-client/out/
-server/out/
+# TypeScript build metadata
 *.tsbuildinfo
 
 # VS Code extension packages

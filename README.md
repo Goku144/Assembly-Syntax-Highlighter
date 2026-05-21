@@ -74,20 +74,24 @@ Useful project files:
 - `server/src/parser/nasmParser.ts` handles NASM-oriented parsing.
 - `server/src/analysis` contains diagnostics, symbol indexing, and instruction validation.
 
-## GitHub Setup
+## Publishing To The VS Code Marketplace
 
-This folder is ready to become a new repository:
+The extension is configured for the Visual Studio Code Marketplace under the `Goku144` publisher ID. Before publishing, create or verify that publisher in the Marketplace publisher dashboard.
 
 ```bash
-git init
-git add .
-git commit -m "Initial Orion Assembly project"
-git branch -M main
-git remote add origin https://github.com/Goku144/Assembly-Syntax-Highlighter.git
-git push -u origin main
+npm install
+npm run compile
+vsce package
+vsce publish
 ```
 
-Before publishing the VS Code extension, update `publisher`, `repository`, `bugs`, and `homepage` in `package.json` if your GitHub owner or marketplace publisher ID is different from `Orion`.
+Publishing requires a Visual Studio Marketplace Personal Access Token with Marketplace Manage permission. If you have not logged in yet, run:
+
+```bash
+vsce login Goku144
+```
+
+Then paste the token when prompted. After that, `vsce publish` uploads the extension to the VS Code Marketplace.
 
 ## License
 

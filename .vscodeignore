@@ -2,12 +2,13 @@
 .github/
 .vscode/
 
-node_modules/
 coverage/
 .nyc_output/
 
 client/src/
 server/src/
+!client/out/**
+!server/out/**
 *.tsbuildinfo
 
 test_highlighting.asm

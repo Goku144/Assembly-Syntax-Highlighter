@@ -292,10 +292,12 @@ function parseLine(document, line, lineOffset, rawLine, code, diagnostics) {
         return statements;
     }
     if (secondLower === "equ" || secondLower === "=") {
+        const valueStart = tokenEnd + (second?.end ?? 0);
+        const valueOperands = splitOperands(document, tail.slice(second?.end ?? 0), valueStart, diagnostics);
         statements.push(makeStatement(document, "equ", line, rawLine, tokenStart, lineOffset + code.length, {
             label: first.text,
             mnemonic: secondLower,
-            operands,
+            operands: valueOperands,
         }));
         return statements;
     }
@@ -330,7 +332,7 @@ function firstToken(text) {
     const match = text.match(/\S+/);
     if (!match || match.index === undefined)
         return undefined;
-    const token = match[0].match(/^%?[A-Za-z_.$?@][A-Za-z0-9_.$?@]*|^\[[^\]]*|^\$?-?(?:0x[0-9a-fA-F]+|[0-9]+)/);
+    const token = match[0].match(/^%?[A-Za-z_.$?@][A-Za-z0-9_.$?@]*|^=|^\[[^\]]*|^\$?-?(?:0x[0-9a-fA-F]+|[0-9]+)/);
     if (!token)
         return undefined;
     return { text: token[0], start: match.index, end: match.index + token[0].length };

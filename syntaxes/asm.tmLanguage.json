@@ -139,7 +139,7 @@
         },
         {
           "name": "keyword.control.directive.equ.x86asm",
-          "match": "\\bequ\\b"
+          "match": "(?i)\\bequ\\b"
         },
         {
           "name": "keyword.control.directive.nasm.x86asm",
@@ -179,11 +179,14 @@
           }
         },
         {
-          "name": "constant.other.symbol.equ.x86asm",
-          "match": "(?i)^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\s+(?:equ|=)\\b",
+          "name": "meta.constant.equ.x86asm",
+          "match": "(?i)^\\s*([A-Za-z_.$?@][A-Za-z0-9_.$?@]*)\\s+(equ|=)\\b",
           "captures": {
             "1": {
               "name": "constant.other.symbol.equ.name.x86asm"
+            },
+            "2": {
+              "name": "keyword.control.directive.equ.x86asm"
             }
           }
         },

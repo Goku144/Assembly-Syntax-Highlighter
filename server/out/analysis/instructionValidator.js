@@ -60,7 +60,12 @@ function loadInstructionForms(extensionRoot) {
 }
 function validateInstructions(program, knownInstructions, macroNames) {
     const diagnostics = [];
-    const context = { bits: inferBits(program), knownInstructions, macroNames };
+    const context = {
+        bits: inferBits(program),
+        knownInstructions,
+        macroNames,
+        constantNames: collectConstantNames(program),
+    };
     for (const statement of program.statements) {
         if (statement.kind !== "instruction" || !statement.mnemonic)
             continue;
@@ -118,6 +123,9 @@ function classifyOperand(operand, context) {
         return classifyMemory(operand, context);
     }
     if (/^\$?-?(?:0x[0-9a-f]+|0b[01]+|[0-9]+|'.*'|".*")$/i.test(text)) {
+        return { kind: "imm", text, range: operand.range, errors: [] };
+    }
+    if (isKnownConstantExpression(text, context.constantNames)) {
         return { kind: "imm", text, range: operand.range, errors: [] };
     }
     if (/^[A-Za-z_.$?@][A-Za-z0-9_.$?@]*(?:[+\-][A-Za-z0-9_.$?@]+)*$/.test(text)) {
@@ -192,6 +200,41 @@ function inferBits(program) {
         }
     }
     return "64";
+}
+function collectConstantNames(program) {
+    const names = new Set();
+    for (const statement of program.statements) {
+        if (statement.kind === "equ" && statement.label) {
+            names.add(statement.label);
+        }
+        if (statement.kind === "directive" && statement.operands[0]) {
+            switch (statement.directive) {
+                case "%define":
+                case "%xdefine":
+                case "%ixdefine":
+                case "%assign":
+                case "%iassign":
+                    names.add(statement.operands[0].text);
+                    break;
+            }
+        }
+    }
+    return names;
+}
+function isKnownConstantExpression(text, constantNames) {
+    const withoutLiterals = text
+        .replace(/'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, " ")
+        .replace(/\$?-?(?:0x[0-9a-f]+|0b[01]+|0o[0-7]+|[0-9][0-9a-f]*h|[0-9]+d?)/gi, " ");
+    const symbolPattern = /[A-Za-z_.$?@][A-Za-z0-9_.$?@]*/g;
+    let sawConstant = false;
+    let match = symbolPattern.exec(withoutLiterals);
+    while (match) {
+        if (!constantNames.has(match[0]))
+            return false;
+        sawConstant = true;
+        match = symbolPattern.exec(withoutLiterals);
+    }
+    return sawConstant && /^[A-Za-z0-9_.$?@\s+\-*/%()'"]+$/.test(text);
 }
 function memoryWidth(size) {
     switch (size) {

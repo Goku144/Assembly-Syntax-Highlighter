@@ -5,6 +5,7 @@ type ValidationContext = {
     bits: Bits;
     knownInstructions: Set<string>;
     macroNames: Set<string>;
+    constantNames: Set<string>;
 };
 export declare function loadInstructionForms(extensionRoot: string): void;
 export declare function validateInstructions(program: ParsedProgram, knownInstructions: Set<string>, macroNames: Set<string>): Diagnostic[];

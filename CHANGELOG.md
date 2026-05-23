@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Improved NASM parsing, validation, and assembly syntax highlighting.
+
 ## 0.1.1
 
 - Updated numeric literal highlighting to use the C-style number green.

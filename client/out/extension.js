@@ -40,6 +40,18 @@ const vscode = __importStar(require("vscode"));
 const node_1 = require("vscode-languageclient/node");
 let client;
 function activate(context) {
+    const debugAsmCommand = vscode.commands.registerCommand("assembly.debugAsm", async () => {
+        const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+        if (!workspaceFolder) {
+            vscode.window.showErrorMessage("Open a workspace folder before debugging ASM.");
+            return;
+        }
+        const started = await vscode.debug.startDebugging(workspaceFolder, "Debug asm");
+        if (!started) {
+            vscode.window.showErrorMessage("Could not start the Debug asm configuration.");
+        }
+    });
+    context.subscriptions.push(debugAsmCommand);
     const serverModule = context.asAbsolutePath(path.join("server", "out", "server.js"));
     const serverOptions = {
         run: { module: serverModule, transport: node_1.TransportKind.ipc },

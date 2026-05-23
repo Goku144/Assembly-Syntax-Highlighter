@@ -10,6 +10,26 @@ import {
 let client: LanguageClient | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
+  const debugAsmCommand = vscode.commands.registerCommand(
+    "assembly.debugAsm",
+    async () => {
+      const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
+
+      if (!workspaceFolder) {
+        vscode.window.showErrorMessage("Open a workspace folder before debugging ASM.");
+        return;
+      }
+
+      const started = await vscode.debug.startDebugging(workspaceFolder, "Debug asm");
+
+      if (!started) {
+        vscode.window.showErrorMessage("Could not start the Debug asm configuration.");
+      }
+    }
+  );
+
+  context.subscriptions.push(debugAsmCommand);
+
   const serverModule = context.asAbsolutePath(
     path.join("server", "out", "server.js")
   );

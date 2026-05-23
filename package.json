@@ -2,7 +2,7 @@
 	"name": "assembly-syntax-highlighter",
 	"displayName": "Orion Assembly",
 	"description": "Assembly language support for x86, x64, ARM, AArch64, RISC-V and MIPS with syntax highlighting and NASM-aware language features.",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.75.0"
@@ -12,7 +12,8 @@
 	],
 	"main": "./client/out/extension.js",
 	"activationEvents": [
-		"onLanguage:x86asm"
+		"onLanguage:x86asm",
+		"onCommand:assembly.debugAsm"
 	],
 	"scripts": {
 		"compile": "tsc -b client server",
@@ -22,6 +23,22 @@
 		"publish:marketplace": "vsce publish"
 	},
 	"contributes": {
+		"commands": [
+			{
+				"command": "assembly.debugAsm",
+				"title": "Debug ASM",
+				"icon": "$(debug-start)"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "assembly.debugAsm",
+					"when": "editorLangId == x86asm",
+					"group": "navigation@1"
+				}
+			]
+		},
 		"configuration": {
 			"title": "Assembly Language",
 			"properties": {
